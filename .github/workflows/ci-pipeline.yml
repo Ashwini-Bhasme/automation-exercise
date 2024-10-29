@@ -1,35 +1,32 @@
 name: CI Pipeline
-
+# The workflow triggers on push to the dev branch.
 on:
   push:
     branches:
       - dev
-  # pull_request:
-  #   branches:
-  #     - dev
-
+# The job will run on a macOS environment hosted by GitHub.
 jobs:
   test:
     runs-on: macos-latest
-
+    # This step clones the repository so the pipeline can access the code for testing.
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-
+      # The setup-node action installs Node.js version 16.
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
-
+      # Runs npm install to install necessary packages.
       - name: Install dependencies
         run: npm install
-
+      # This ensures the Playwright browsers (Chromium, Firefox, WebKit) and required dependencies are installed.
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-
+      #  Run Playwright Tests with HTML Reporter
       - name: Run Playwright tests
         run: npx playwright test --reporter=html
-
+      # : Upload the Test Report as an Artifact
       - name: Upload Test Report
         uses: actions/upload-artifact@v3
         with:
